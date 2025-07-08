@@ -22,10 +22,15 @@ class Player(GameSprite):
     def update(self):
         self.rect.x += self.x_speed
         self.rect.y += self.y_speed
-        # for wall in walls:
-        #     if sprite.collide_rect(self, wall):
-        #         self.rect.x, self.rect.y = old_x, old_y
-        #         break
+class Enemy(GameSprite):
+    def __init__(self, img, x, y, x_speed, width, height):
+        GameSprite.__init__(self, img, x, y, width, height)
+        self.x_speed = x_speed
+    def update(self):
+        if self.rect.x <= 420:
+            self.rect.x += self.x_speed
+        if self.rect.x >= width - 50:
+            self.rect.x -= self.x_speed
 player = Player('hero.png', 50, 50, 0,0, 50, 50)
 walls = sprite.Group()
 wall1 = GameSprite('platform_h.png', 200, 100, 300, 50)
@@ -34,6 +39,7 @@ wall2 = GameSprite('platform_v.png', 400, 200,50, 300)
 walls.add(wall2)
 wall3 = GameSprite('platform_h.png', 100, 400, 300, 50)
 walls.add(wall3)
+enemy = Enemy('enemy.png', width - 80, 150, 5, 80,80)
 clock = time.Clock()
 running = True
 while running:
@@ -55,10 +61,12 @@ while running:
                 player.x_speed = 0
             if e.key in [K_UP, K_DOWN]:
                 player.y_speed = 0
-    player.update(walls)
+    player.update()
+    enemy.update()
     for wall in walls:
         wall.reset()
     player.reset()
+    enemy.reset()
     display.update()
     clock.tick(60)
 quit()
